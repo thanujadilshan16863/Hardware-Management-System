@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -52,8 +52,11 @@ namespace Hardware_Management_System
             int qty=Convert.ToInt32(txtqty.Text);
             double dis_I = Convert.ToDouble(txtdis_I.Text);
             double dis=Convert.ToDouble(txtdis.Text);
-            double Tot_Each = Convert.ToDouble(Tot_Each);
-        
+
+            calculation cal=new calculation();
+            double Tot_Each = cal.Customer_Total(id,qty, dis_I, dis);
+
+
             new ItemDB().Customer_Insert(name,id,qty,dis_I,dis,Tot_Each);
 
             txtname.Clear();txtid.Clear();txtqty.Clear();txtdis_I.Clear();txtdis.Clear();
@@ -87,6 +90,25 @@ namespace Hardware_Management_System
             new ItemDB().Customer_Delete(id);
             
             txtid.Clear();
+        }
+
+        private void txttot_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btncalculate_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void txtid_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtdis_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
