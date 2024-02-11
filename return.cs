@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -46,6 +46,26 @@ namespace Hardware_Management_System
             customer customerForm = new customer();
             customerForm.Show();
             this.Hide();
+        }
+
+        private void guna2Button3_Click(object sender, EventArgs e)
+        {
+            int RItem_ID = Convert.ToInt32(txtritemid.Text);
+            String R_Name = txtrname.Text;
+            int R_qty = Convert.ToInt32(txtrqty.Text);
+            
+            new ItemDB().Return_Insert(RItem_ID,R_Name,R_qty);
+        }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            int Item_ID = Convert.ToInt32(txtritemid.Text);
+            new ItemDB().Return_Delete(Item_ID);
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
