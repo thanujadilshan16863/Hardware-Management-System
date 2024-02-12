@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 11, 2024 at 05:10 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Feb 12, 2024 at 06:22 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -101,9 +101,22 @@ CREATE TABLE `employee` (
 CREATE TABLE `return` (
   `Item_ID` int(11) NOT NULL,
   `Dealer_ID` int(11) NOT NULL,
-  `Quntity_R` int(11) NOT NULL,
-  `Date/Time` date NOT NULL
+  `Quantity_R` int(11) NOT NULL,
+  `Date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `return`
+--
+
+INSERT INTO `return` (`Item_ID`, `Dealer_ID`, `Quantity_R`, `Date`) VALUES
+(22, 11, 33, '0000-00-00'),
+(22, 11, 33, '0000-00-00'),
+(22, 11, 33, '0000-00-00'),
+(33, 22, 22, '0000-00-00'),
+(22, 11, 44, '0000-00-00'),
+(22, 11, 22, '0000-00-00'),
+(22, 11, 33, '2024-02-12');
 
 -- --------------------------------------------------------
 
