@@ -15,6 +15,7 @@ namespace Hardware_Management_System
         public @return()
         {
             InitializeComponent();
+            dataGridView1.DataSource = new ItemDB().Return_SelectAll();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -51,19 +52,32 @@ namespace Hardware_Management_System
         private void guna2Button3_Click(object sender, EventArgs e)
         {
             int RItem_ID = Convert.ToInt32(txtritemid.Text);
-            String R_Name = txtrname.Text;
+            string R_Name = txtrname.Text;
             int R_qty = Convert.ToInt32(txtrqty.Text);
-            
-            new ItemDB().Return_Insert(RItem_ID,R_Name,R_qty);
+
+            // Get selected date and time from the DateTimePicker
+            DateTime selectedDateTime = guna2DateTimePicker1.Value;
+
+            // Assuming DealerID is a variable you want to use (adjust as needed)
+            int DealerID = Convert.ToInt32(txtrname.Text); 
+
+            new ItemDB().Return_Insert(RItem_ID, DealerID, R_qty, selectedDateTime);
         }
+
+
 
         private void guna2Button2_Click(object sender, EventArgs e)
         {
-            int Item_ID = Convert.ToInt32(txtritemid.Text);
-            new ItemDB().Return_Delete(Item_ID);
+            int RItem_ID = Convert.ToInt32(txtritemid.Text);
+            new ItemDB().Return_Delete(RItem_ID);
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void return_Load(object sender, EventArgs e)
         {
 
         }
