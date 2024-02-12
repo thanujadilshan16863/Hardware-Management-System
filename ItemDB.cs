@@ -60,6 +60,26 @@ namespace Hardware_Management_System
             table.Load(rdr);
             return table;
         }
+        public DataTable Return_SelectAll()
+        {
+            using (MySqlConnection con = new Dbconnection().ConnectDB())
+            {
+                string query = "SELECT Item_ID, Dealer_ID, Quantity_R, CAST(`Date` AS CHAR) AS Date FROM `return`";
+                using (MySqlCommand cmd = new MySqlCommand(query, con))
+                {
+                    con.Open();
+                    using (MySqlDataReader rdr1 = cmd.ExecuteReader())
+                    {
+                        DataTable table1 = new DataTable();
+                        table1.Load(rdr1);
+                        return table1;
+                    }
+                }
+            }
+        }
+
+
+
         public void Customer_Insert(string name, int id, int qty, double dis_I, double dis,double Tot_Each)
         {
             MySqlConnection con = new Dbconnection().ConnectDB();
@@ -94,24 +114,38 @@ namespace Hardware_Management_System
             con.Open();
             cmd.ExecuteNonQuery();
         }
-        public void Return_Insert(int RItem_ID,string R_Name,int R_qty)
+        public void Return_Insert(int Item_ID, int Dealer_ID, int Quantity_R, DateTime selectedDateTime)
         {
-            //thing date automatic update...
+            using (MySqlConnection con = new Dbconnection().ConnectDB())
+            {
+                string sql = "INSERT INTO `return` (Item_ID, Dealer_ID, Quantity_R, Date) VALUES (@ItemID, @DealerID, @QuantityR, @ReturnDate)";
+                using (MySqlCommand cmd = new MySqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@ItemID", Item_ID);
+                    cmd.Parameters.AddWithValue("@DealerID", Dealer_ID);
+                    cmd.Parameters.AddWithValue("@QuantityR", Quantity_R);
+                    cmd.Parameters.AddWithValue("@ReturnDate", selectedDateTime);
 
-            MySqlConnection con = new Dbconnection().ConnectDB();
-            string sql = "insert into return(Item_ID,Dealer_ID,Quantity_R)values(" +RItem_ID+","+R_Name+","+R_qty+")";
-            MySqlCommand cmd = new MySqlCommand(sql, con);
-            con.Open();
-            cmd.ExecuteNonQuery();
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
-            
+
         public void Return_Delete(int Item_ID)
         {
-            MySqlConnection con = new Dbconnection().ConnectDB();
-            string sql = "delete from return where Item_ID=" + Item_ID;
-            MySqlCommand cmd = new MySqlCommand(sql, con);
-            con.Open();
-            cmd.ExecuteNonQuery();
+            using (MySqlConnection con = new Dbconnection().ConnectDB())
+            {
+                string sql = "DELETE FROM `return` WHERE Item_ID = @ItemID";
+                using (MySqlCommand cmd = new MySqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@ItemID", Item_ID);
+
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
+
     }
 }
