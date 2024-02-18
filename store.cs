@@ -30,8 +30,18 @@ namespace Hardware_Management_System
 
         private void guna2Button2_Click(object sender, EventArgs e)
         {
-            string search_itemID = guna2TextBox2.Text;
-            store store= new ItemDB().findbyitemID(search_itemID);
+            MySqlConnection con = new Dbconnection().ConnectDB();
+            con.Open();
+            string query = "select * from store where Item_ID=@Item_ID";
+            MySqlCommand cmd = new MySqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@Item_ID", guna2TextBox2.Text);
+            DataTable dt = new DataTable();
+            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+            adapter.Fill(dt);
+            dataGridView1.DataSource = dt;
+            con.Close();
+            
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
