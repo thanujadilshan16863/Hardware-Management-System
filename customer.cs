@@ -1,3 +1,4 @@
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,22 +48,68 @@ namespace Hardware_Management_System
 
         private void guna2Button3_Click(object sender, EventArgs e)
         {
-            string name=txtname.Text;
-            int id=Convert.ToInt32(txtid.Text);
-            int qty=Convert.ToInt32(txtqty.Text);
-            double dis_I = Convert.ToDouble(txtdis_I.Text);
-            double dis=Convert.ToDouble(txtdis.Text);
+            try
+            {
+                int id = Convert.ToInt32(txtid.Text);
+                int qty = Convert.ToInt32(txtqty.Text);
+                double dis_I = Convert.ToDouble(txtdis_I.Text);
+                double dis = Convert.ToDouble(txtdis.Text);
 
-            calculation cal=new calculation();
-            double Tot_Each = cal.Customer_Total(id,qty, dis_I, dis);
+                calculation cal = new calculation();
+                double Tot_Each = cal.Customer_Total(id, qty, dis_I, dis);
 
+                // Retrieve name from store table
+                string name = RetrieveNameFromStore(id);
 
-            new ItemDB().Customer_Insert(name,id,qty,dis_I,dis,Tot_Each);
+                // Check if the name is valid
+                if (!string.IsNullOrEmpty(name))
+                {
+                    new ItemDB().Customer_Insert(name, id, qty, dis_I, dis, Tot_Each);
 
-            txtname.Clear();txtid.Clear();txtqty.Clear();txtdis_I.Clear();txtdis.Clear();
+                    txtname.Clear();
+                    txtid.Clear();
+                    txtqty.Clear();
+                    txtdis_I.Clear();
+                    txtdis.Clear();
 
-            
+                 
+                }
+                else
+                {
+                    MessageBox.Show($"Item with Item_ID {id} not found in the store.");
+                }
+                //refresh database
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = new ItemDB().Customer_SelectAll();
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}\nPlease enter valid numeric values for ID, Quantity, Discount_I");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
+
+
+        private string RetrieveNameFromStore(int id)
+        {
+            MySqlConnection con = new Dbconnection().ConnectDB();
+            string query = "SELECT Name_I FROM store WHERE Item_ID = @id";
+
+            MySqlCommand cmd = new MySqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            con.Open();
+            object result = cmd.ExecuteScalar();
+            con.Close();
+
+            // Check if the result is not null and return the name as string
+            return result != null ? result.ToString() : null;
+        }
+
+
 
         private void customer_Load(object sender, EventArgs e)
         {
@@ -86,10 +133,15 @@ namespace Hardware_Management_System
 
         private void guna2Button2_Click(object sender, EventArgs e)
         {
-            int id = Convert.ToInt32(txtid.Text);
-            new ItemDB().Customer_Delete(id);
-            
-            txtid.Clear();
+            try
+            {
+                int RItem_ID = Convert.ToInt32(txtid.Text);
+                new ItemDB().Customer_Delete(RItem_ID);
+                MessageBox.Show("deleted");
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = new ItemDB().Customer_SelectAll();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void txttot_TextChanged(object sender, EventArgs e)
