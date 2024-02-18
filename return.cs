@@ -51,25 +51,60 @@ namespace Hardware_Management_System
 
         private void guna2Button3_Click(object sender, EventArgs e)
         {
-            int RItem_ID = Convert.ToInt32(txtritemid.Text);
-            string R_Name = txtrname.Text;
-            int R_qty = Convert.ToInt32(txtrqty.Text);
+            try
+            {
+                int RItem_ID = Convert.ToInt32(txtritemid.Text);
+                string R_Name = txtrname.Text;
+                int R_qty = Convert.ToInt32(txtrqty.Text);
 
-            // Get selected date and time from the DateTimePicker
-            DateTime selectedDateTime = guna2DateTimePicker1.Value;
 
-            // Assuming DealerID is a variable you want to use (adjust as needed)
-            int DealerID = Convert.ToInt32(txtrname.Text); 
+                DateTime selectedDateTime = guna2DateTimePicker1.Value;
 
-            new ItemDB().Return_Insert(RItem_ID, DealerID, R_qty, selectedDateTime);
+
+                int DealerID = Convert.ToInt32(txtrname.Text);
+
+                new ItemDB().Return_Insert(RItem_ID, DealerID, R_qty, selectedDateTime);
+
+                // Refresh the DataGridView
+                RefreshDataGridView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            txtritemid.Clear();txtrname.Clear();txtrqty.Clear();
+        }
+
+        private void RefreshDataGridView()
+        {
+            try
+            {
+
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = new ItemDB().Return_SelectAll();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error refreshing DataGridView: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
 
         private void guna2Button2_Click(object sender, EventArgs e)
         {
-            int RItem_ID = Convert.ToInt32(txtritemid.Text);
-            new ItemDB().Return_Delete(RItem_ID);
+            try
+            {
+                int RItem_ID = Convert.ToInt32(txtritemid.Text);
+                new ItemDB().Return_Delete(RItem_ID);
+                MessageBox.Show("deleted");
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = new ItemDB().Return_SelectAll();
+            }
+            catch(Exception ex) { MessageBox.Show(ex.Message); }
+
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
